@@ -4,17 +4,20 @@ php:
 
 env:
   global:
-  - PUUID='ed64345a-aa95-4e9e-b919-1fe9e8537ce6'
+  # Site information for fresh install (drops7 upstream)
   - PNAME='10stepstest'
+  - PUUID=`drush psite-uuid $PNAME | cut -f2 -d' '`
+  # Site information for upgrade testing (10s2cl-drops7 upstream)
   - PSOURCE='dev'
-  - PUUID2='8a5a7756-3049-4ac4-a6e6-6e926520933a'
   - PNAME2='10steps'
+  - PUUID2=`drush psite-uuid $PNAME2 | cut -f2 -d' '`
+  # Encrypted email and password for terminus to authenticate into Pantheon
   - secure: "E4Xtuee9bZ9iqFKPyTR3hA5dE/su7iz9sW1Qb2B6Al+Wh9EDoC9IJlF/g6MypVvduAKeSoIf9Judnnr1xt/E324OxYKCRFBAWpfFn8pnNchO2kFacwCX54q2ZnHxdg1Mhpcw1dUo61+7FvrKK6q9sg4LVZ+CzxuPi6p/3Ly/Fgc="
   - secure: "B36n51LDAYS/aPukaz9nnQAiOQLKb95aLNYqBrY7HGGSHnUgDa7098ZNCTqp/M0SDSeFLblfU44gi2hMpw8gfKPzhVvfn5iJocT5laXkWIB9MUJhTngCbponu1zC0UJqAgiIxfVpOSLrESHNJxbJxIzkSqDudijT8syLuEgPEeg="
-  - PSITE=$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 4)
-  - PSITE="ci$TRAVIS_BUILD_NUMBER-$PSITE"
-  - PHOST="https://$PSITE-$PNAME.gotpantheon.com"
-  - PHOST2="https://$PSITE-$PNAME2.gotpantheon.com"
+  # Generate a string for the upstream branch name
+  - UBRANCH=$DISTRO-$TRAVIS_BUILD_NUMBER
+  - PHOST="https://dev-$PNAME.gotpantheon.com"
+  - PHOST2="https://dev-$PNAME2.gotpantheon.com"
   - DISTRO="10s2cl"
   - UPSTREAM_BUILD_DIR="$DISTRO-drops7"
   - secure: "FJnKApQTXi4ZmbRe5aiB5umOOmCGi5EJpT4f49zC13dQa4/0XcLafQwb/+mhMp5e7hBXFedKkXkzG758dlYh3dWiFdBmJdoD4oQEVd+MNcMn8aLmb7vyPrEsH6DXPrrwOXunLCBRiMQHwPT8hCTTewpLCawFX5B157t0uNcCPg0="
@@ -58,8 +61,13 @@ install:
 
 
   # Install additional test dependencies here (like Casper, Behat, etc).
-
+  # Selenium:
+  # - java -jar selenium-server-standalone-2.33.0.jar &
+  # //replace with the name of the version you downloaded
+  # Behat:
+  # - composer global require behat
 before_script:
+  # Decrypt the encoded private key to the /.ssh directory.
   - echo -n $id_rsa_{00..30} >> ~/.ssh/id_rsa_base64
   - base64 --decode --ignore-garbage ~/.ssh/id_rsa_base64 > ~/.ssh/id_rsa
   - chmod 600 ~/.ssh/id_rsa
@@ -67,57 +75,57 @@ before_script:
   # Authenticate with Pantheon via Terminus.
   - drush pauth $PEMAIL --password=$PPASS
 
-  # Build the Upstream repo for testing with drush make
+  # Build the Upstream repo with drush make.
   - cd $TRAVIS_BUILD_DIR
   - drush make $DISTRO.make ~/$UPSTREAM_BUILD_DIR -y
   - cd ~/$UPSTREAM_BUILD_DIR
-  - git config --global user.email "training@getpantheon.com"
-  - git config --global user.name "Pantheon Training"
+  - git config --global user.email ""
+  - git config --global user.name ""
   - git init
-  # Add both Pantheonsites as remotes to our repo and force push to it.
-  - git checkout -b $PSITE
+  # Add the fresh install Pantheon site a remote and push to it.
   - git remote add pantheon_install ssh://codeserver.dev.$PUUID@codeserver.dev.$PUUID.drush.in:2222/~/repository.git
   - git remote add pantheon_upgrade ssh://codeserver.dev.$PUUID2@codeserver.dev.$PUUID2.drush.in:2222/~/repository.git
   - git add ~/$UPSTREAM_BUILD_DIR
   - git commit -m "Build $PSITE"
+  # Add the update test site as a remote and push a branch to it.
   # Ensure the targets are in git mode
   - drush psite-cmode $PUUID dev git
-  - drush psite-cmode $PUUID dev git
-  - git push --force pantheon_install $PSITE
-  - git push --force pantheon_upgrade $PSITE
-
-  # Create a new Pantheon environment using the above branch.
-  - drush psite-ecreate $PUUID $PSITE --source=$PSOURCE || true
-  - drush psite-ecreate $PUUID2 $PSITE --source=$PSOURCE || true
-
-  # Update our drush aliases file.
-  - drush paliases
-  - drush cc drush
+  - drush psite-cmode $PUUID2 dev git
+  - git push --force pantheon_install
+  - git push --force pantheon_upgrade
 
   # We cannot be in a Drupal directory to run aliased drush commands.
   - cd $HOME
   # We need to create the settings.php file in order to run drush commands for
   # the fresh installation.
-  - drush @pantheon.$PNAME.$PSITE si
+  - drush @pantheon.$PNAME.dev si pantheon --account-pass="admin" --site-name=$DISTRO-Build-Test --site-mail=noreply@getpantheon.com -y
   # When new modules are added to the codebase, updb can sometimes fail (thus
   # causing a failed build) because the system table and modules are out of
   # sync. We get around this by clearing all caches before attempting anything.
   # The "|| true" works around issues where Views and Block conflict during
   # cache clears / block rehashes.
-  - drush @pantheon.$PNAME.$PSITE cc all --strict=0 || true
+  - drush @pantheon.$PNAME2.dev cc all --strict=0 || true
 
   # Run all available updates on the upgrade site as if deploying. For now, append the
   # --strict=0 option for Drush 6.x compatibility on Pantheon.
-  - drush @pantheon.$PNAME2.$PSITE updb -y --strict=0
+  - drush @pantheon.$PNAME2.dev updb -y --strict=0
 
   # Enable additional test dependencies here, like SimpleTest.
   - drush @pantheon.$PNAME.$PSITE en simpletest -y --strict=0
   - drush @pantheon.$PNAME2.$PSITE en simpletest -y --strict=0
+  - drush @pantheon.$PNAME.$PSITE en drupalextension -y --strict=0
+  - drush @pantheon.$PNAME2.$PSITE en drupalextension -y --strict=0
 
   # If you're using SimpleTest, you'll want to disable verbose logging. This
   # ensures no false build failures from file write errors.
   - drush @pantheon.$PNAME.$PSITE vset -y simpletest_verbose 0 --strict=0
   - drush @pantheon.$PNAME2.$PSITE vset -y simpletest_verbose 0 --strict=0
+
+  # If drush psite-wipe doesn't work, then we need to create a new site each
+  # build to avoid manually resetting the site.
+  #- drush psite-create @DISTRO-fresh
+  #- FRESH_UUID=`drush psite-uuid @DISTRO-fresh | cut -f2 -d' '`
+
 
 script:
   #
@@ -135,7 +143,7 @@ after_script:
 
   # Delete the git branch we created.
   - cd $UPSTREAM_BUILD_DIR;
-  - git remote-add upstream git@github.com:pantheon-learning/10s2cl-drops7.git
+  - git remote-add upstream git@github.com:pantheon-learning/$DISTRO-drops7.git
   - git push --force upstream $PSITE
 notifications:
   email:
