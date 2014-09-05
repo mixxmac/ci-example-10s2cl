@@ -93,7 +93,7 @@ before_script:
   - drush psite-cmode $PUUID dev git
   - drush psite-cmode $PUUID2 dev git
   - git push --force pantheon_install master
-  - git push pantheon_upgrade master
+  - git push --force pantheon_upgrade master
 
   # We cannot be in a Drupal directory to run aliased drush commands.
   - cd $HOME
