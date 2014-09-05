@@ -6,11 +6,9 @@ env:
   global:
   # Site information for fresh install (drops7 upstream)
   - PNAME='10stepstest'
-  - PUUID="`drush psite-uuid $PNAME | cut -f2 -d' '`"
   # Site information for upgrade testing (10s2cl-drops7 upstream)
   - PSOURCE='dev'
   - PNAME2='10steps'
-  - PUUID2="`drush psite-uuid $PNAME2 | cut -f2 -d' '`"
   # Encrypted email and password for terminus to authenticate into Pantheon
   - secure: "E4Xtuee9bZ9iqFKPyTR3hA5dE/su7iz9sW1Qb2B6Al+Wh9EDoC9IJlF/g6MypVvduAKeSoIf9Judnnr1xt/E324OxYKCRFBAWpfFn8pnNchO2kFacwCX54q2ZnHxdg1Mhpcw1dUo61+7FvrKK6q9sg4LVZ+CzxuPi6p/3Ly/Fgc="
   - secure: "B36n51LDAYS/aPukaz9nnQAiOQLKb95aLNYqBrY7HGGSHnUgDa7098ZNCTqp/M0SDSeFLblfU44gi2hMpw8gfKPzhVvfn5iJocT5laXkWIB9MUJhTngCbponu1zC0UJqAgiIxfVpOSLrESHNJxbJxIzkSqDudijT8syLuEgPEeg="
@@ -82,6 +80,9 @@ before_script:
   - git config --global user.email "training@getpantheon.com"
   - git config --global user.name "Pantheon Training"
   - git init
+  # Obtain and set the UUID's for the sites
+  - PUUID=`drush psite-uuid $PNAME | cut -f2 -d' '`
+  - PUUID2=`drush psite-uuid $PNAME2 | cut -f2 -d' '`
   # Add the fresh install Pantheon site a remote and push to it.
   - git remote add pantheon_install ssh://codeserver.dev.$PUUID@codeserver.dev.$PUUID.drush.in:2222/~/repository.git
   - git remote add pantheon_upgrade ssh://codeserver.dev.$PUUID2@codeserver.dev.$PUUID2.drush.in:2222/~/repository.git
