@@ -72,6 +72,7 @@ before_script:
   - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   # Authenticate with Pantheon via Terminus.
   - drush pauth $PEMAIL --password=$PPASS
+  - drush paliases
 
   # Build the Upstream repo with drush make.
   - cd $TRAVIS_BUILD_DIR
