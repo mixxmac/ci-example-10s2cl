@@ -104,7 +104,7 @@ before_script:
   - drush psite-cmode $PUUID dev sftp
   - sleep 30s
   - drush @pantheon.$PNAME.dev si pantheon --account-pass="admin" --site-name=$DISTRO-Build-Test --site-mail=noreply@getpantheon.com -y
-  - drush psite-commit $PUUID --message=Install site creating settings.php
+  - drush psite-commit $PUUID dev --message=Install site creating settings.php
   # When new modules are added to the codebase, updb can sometimes fail (thus
   # causing a failed build) because the system table and modules are out of
   # sync. We get around this by clearing all caches before attempting anything.
