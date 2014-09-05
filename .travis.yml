@@ -79,8 +79,8 @@ before_script:
   - cd $TRAVIS_BUILD_DIR
   - drush make $DISTRO.make ~/$UPSTREAM_BUILD_DIR -y
   - cd ~/$UPSTREAM_BUILD_DIR
-  - git config --global user.email ""
-  - git config --global user.name ""
+  - git config --global user.email "training@getpantheon.com"
+  - git config --global user.name "Pantheon Training"
   - git init
   # Add the fresh install Pantheon site a remote and push to it.
   - git remote add pantheon_install ssh://codeserver.dev.$PUUID@codeserver.dev.$PUUID.drush.in:2222/~/repository.git
