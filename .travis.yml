@@ -93,6 +93,7 @@ before_script:
   # Ensure the targets are in git mode
   - drush psite-cmode $PUUID dev git
   - drush psite-cmode $PUUID2 dev git
+  - sleep 15
   - git push --force pantheon_install master
   - git push --force pantheon_upgrade master
 
@@ -101,6 +102,7 @@ before_script:
   # We need to create the settings.php file in order to run drush commands for
   # the fresh installation.
   - drush psite-cmode $PUUID dev sftp
+  - sleep 15
   - drush @pantheon.$PNAME.dev si pantheon --account-pass="admin" --site-name=$DISTRO-Build-Test --site-mail=noreply@getpantheon.com -y
   - drush psite-commit $PUUID --message=Install site creating settings.php
   # When new modules are added to the codebase, updb can sometimes fail (thus
