@@ -79,7 +79,7 @@ before_script:
     - drush pauth $PEMAIL --password=$PPASS
     - drush paliases
   # Obtain an"d set the UUID's for the site(s)
-    - PUUID="`drush psite-uuid $PNAME | cut -f2 -d' '`"
+    - PUUID=`drush psite-uuid $PNAME | cut -f2 -d' '`
   # Wipe the target environment
     - drush psite-cmode PUUID dev git
     - drush psite-ewipe PUUID dev
