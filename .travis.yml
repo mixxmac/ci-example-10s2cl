@@ -10,7 +10,7 @@ env:
     # a Vanilla Drops7 Pantheon site named $DISTRO-install-test
   # If your upstream or Pantheon site are named differently, adjust here
   # Name the distro
-    - DISTRO='10s2cl'
+    - DISTRO=10s2cl
     - UPSTREAM="$DISTRO-drops7"
   # Site infomation for fresh install (drops7 upstream)
     - PNAME="$DISTRO-install-test"
