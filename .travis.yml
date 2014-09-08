@@ -10,7 +10,8 @@ env:
     # a Vanilla Drops7 Pantheon site named $DISTRO-install-test
   # If your upstream or Pantheon site are named differently, adjust here
   # Name the distro
-    - DISTRO=10s2cl
+    - DISTRO='10s2cl'
+  # Name the upstream
     - UPSTREAM="$DISTRO-drops7"
   # Site infomation for fresh install (drops7 upstream)
     - PNAME="$DISTRO-install-test"
@@ -19,7 +20,7 @@ env:
     - secure: "E4Xtuee9bZ9iqFKPyTR3hA5dE/su7iz9sW1Qb2B6Al+Wh9EDoC9IJlF/g6MypVvduAKeSoIf9Judnnr1xt/E324OxYKCRFBAWpfFn8pnNchO2kFacwCX54q2ZnHxdg1Mhpcw1dUo61+7FvrKK6q9sg4LVZ+CzxuPi6p/3Ly/Fgc="
     - secure: "B36n51LDAYS/aPukaz9nnQAiOQLKb95aLNYqBrY7HGGSHnUgDa7098ZNCTqp/M0SDSeFLblfU44gi2hMpw8gfKPzhVvfn5iJocT5laXkWIB9MUJhTngCbponu1zC0UJqAgiIxfVpOSLrESHNJxbJxIzkSqDudijT8syLuEgPEeg="
   # Upstream repo branch name to push to, upon success
-    - UBRANCH=Build-$TRAVIS_BUILD_NUMBER
+    - UBRANCH="Build-$TRAVIS_BUILD_NUMBER"
   # Identify the target environment
     - PHOST="https://dev-$PNAME.gotpantheon.com"
     - UPSTREAM_BUILD_DIR=$DISTRO-drops7
