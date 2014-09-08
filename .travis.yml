@@ -1,72 +1,140 @@
 language: php
-
 php:
-  - 5.3
-
+- 5.3
 
 env:
   global:
-    # Your Pantheon site's UUID (e.g. from your dashboard URL)
-    - PUUID='ed64345a-aa95-4e9e-b919-1fe9e8537ce6'
-
-    # Your Pantheon site's name.
-    - PNAME='10stepstest'
-
-    # The Pantheon environment name from which Multidev DB/files will be pulled.
-    # Probably one of: dev, test, live.
+  # REQUIREMENTS:
+    # A public github repo for the distribution named $DISTRO
+    # a second github repo for the Pantheon Upstream named PNAME=$DISTRO-drops7
+    # a Vanilla Drops7 Pantheon site named $DISTRO-install-test
+  # If your upstream or Pantheon site are named differently, adjust here
+  # Name the distro
+    - DISTRO='10s2cl'
+  # Name the upstream
+    - UPSTREAM='10s2cl-drops7'
+  # Site infomation for fresh install (drops7 upstream)
+    - PNAME='10s2cl-install-test'
     - PSOURCE='dev'
-
-    #
-    # PEMAIL environment variable: represents the Pantheon account e-mail with
-    # access to this site. Used to authenticate to Pantheon via Terminus. You
-    # must cd to your project root and run:
-    #
-    # travis encrypt PEMAIL='test@example.com' --add env.global
-    #
-    # Which will eventually look something like the key below.
-    # See: http://docs.travis-ci.com/user/build-configuration/#Secure-environment-variables
-    #
+  # Encrypted email and password variables for terminus to authenticate into Pantheon
     - secure: "E4Xtuee9bZ9iqFKPyTR3hA5dE/su7iz9sW1Qb2B6Al+Wh9EDoC9IJlF/g6MypVvduAKeSoIf9Judnnr1xt/E324OxYKCRFBAWpfFn8pnNchO2kFacwCX54q2ZnHxdg1Mhpcw1dUo61+7FvrKK6q9sg4LVZ+CzxuPi6p/3Ly/Fgc="
-
-    #
-    # PPASS environment variable: represents the Pantheon account password for
-    # the above encrypted e-mail address. Run:
-    # 
-    # travis encrypt PPASS='my_account_password' --add env.global
-    #
-    - secure: "U+wHmgqjuk14i0OLMPd+fH2XJ0o1F4PmAtDwT4ylVd8Onz3E4IFCI35W8EqgrUaAT83vNz8hm/+N83y8ktusXIHX2Zl5ow8J5/XG/Ireokc7sfgPSsnpHOZ+N6/gbjed80/RSMZQ596dy2bE6eZsrdFFJd/LRTYaJ4zpAmhJkVw="
-
-
-    # Generate a random branch / multidev name, prefixed with "ci" followed
-    # by the Travis build number. Note, due to Pantheon multidev environment
-    # name limits, builds will start failing at #100000.
-    - PSITE=$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 4)
-    - PSITE="ci$TRAVIS_BUILD_NUMBER-$PSITE"
-
-    # You can use $PHOST as a reference to the resulting multidev hostname.
-    - PHOST="https://$PSITE-$PNAME.gotpantheon.com"
+    - secure: "B36n51LDAYS/aPukaz9nnQAiOQLKb95aLNYqBrY7HGGSHnUgDa7098ZNCTqp/M0SDSeFLblfU44gi2hMpw8gfKPzhVvfn5iJocT5laXkWIB9MUJhTngCbponu1zC0UJqAgiIxfVpOSLrESHNJxbJxIzkSqDudijT8syLuEgPEeg="
+  # Identify the target environment
+    - PHOST="https://dev-$PNAME.gotpantheon.com"
+    - UPSTREAM_BUILD_DIR=~/$DISTRO-drops7
+  # Encripted private Key
+    - secure: "FJnKApQTXi4ZmbRe5aiB5umOOmCGi5EJpT4f49zC13dQa4/0XcLafQwb/+mhMp5e7hBXFedKkXkzG758dlYh3dWiFdBmJdoD4oQEVd+MNcMn8aLmb7vyPrEsH6DXPrrwOXunLCBRiMQHwPT8hCTTewpLCawFX5B157t0uNcCPg0="
+    - secure: "D/vtljoTqcKHmkKFRUuF5dcksmRTl+wkNlNDPASSrzrpsVmYv4ZstX4S0txqtPp2Ul1Xq9v5uX2hDL+0DpMBACNTjnoe2Gh3NbFj6YB+SBke6OyTmjMOAC3WalFRXzQU5Jlz8DoJfPxwEG5aOq9Qi0PrISCyiI9AC3PxrJDtYN4="
+    - secure: "DnMnnhaEgxRXw5HsyOc3FbkSUtaJOGchG/WqL1wspae6xy6EoOGC9cvXG+2u82bP9A5FjEypD4SiUVGqo7+8m9WceWJaCPD7Zu0IQrF/AiJT3o2qZVPPSyjzXMbpiQQOIoNRYmkxL+m6RXj+9hTr9kvp1MdRTL4s/UBI3Ho7/wA="
+    - secure: "UtvRA4Z4WWj64ZHOcXbEEwCAnT9z/MqJtrXhf5OtQYUTS+g06JRjAOpztk0sCr0eKWwHaWRLyyIUXdzZhEdGWMVfeSGjCa1a4khMqSjzvBZx1DzfMAP5xqF4G8n6LuJntqHa+Ty2rAjaJ9fq/mtM738J1WSR+CEiz5qiguZsSpc="
+    - secure: "NkSMxb/CWI4wK8C2KBnuZfMFTlvfKyfF18XBbW0iVAOp3ykHB3NHvV13hANfR+mThG8r0rkX4fpvN+48hL96P7bEF62a2L3/JgUotfxSdUpFDtqmJ7xOkbx4hwkmTVWFxyUzeUDMH0wmuD/Fb1+DJsuebyiwOPbst41CkR6nwWs="
+    - secure: "dgS2qOBvsG8JKSuDUG2FFfO//1RAXYNIlWg4umMXIr2CMbFJELPkYwmPqTV7lbsQLJ01CTRaGhNpXQAFB93ox+5h/Cqi7EIqMog47ZyaLlWx4NItRjFJpkFvWd3l/oAXh6wYS/QT7zonx+i/HrCL1TWjLWPnVLv9NZK6mxMg6U4="
+    - secure: "IqPU+Ll0o0T20pwgMlhfTi24+Fm5hGWZ4m/8/I4YqCcwmyplNkG+l1C72buUXnqT7u2yTLgADP/qFcWaq3GjzFLo3/lBun191llTxwYxzu/lURlwiVb0+zzb3ZBkh1Kfrt3Ut/VAqvYdGlOc9gWI+hjbiXUozNY4rWdmiaQui60="
+    - secure: "FzwlMIM/ieO1SEaPRb2O1N3ToyKWeY2eoVp0u0RwLwtUdnKPx6UdH4QMS9t3ddXjjfs3QYy5EDE9kyp5ENMNEzuepmeFUKjFUBTPpN+Xig/pTzADX67CPwpMDdpdopJqWsQN9XvpCxU8zt20X1WggmINom4HbFjnvV2KJIWkbKA="
+    - secure: "APE+hrQBJGHStCTici9rGUOlwYkEBDZJfARdq9bvcC9MWtOYZAX0AphN+hchjS4iqfEVQ/BjeqcP1fHluuMPbs9dsWIoxvh+TLjH0UNm82H9YPt1zNKdawCIga8OLpJSwbjV33rCt7wMH5gPX9oMiGoIb2fxyTchAUo/l5RjD9E="
+    - secure: "AVmC8BNFJUPNZosz8inpDPpUfT7cn10zZIqgOggkj5yHph36Kmv0N4sIk1yaFQvHMHteemH2haF083N5Xx3AqDH2tzmTNuwg36mAS+jlvi6JX73ACuYhsiLwnW+YlP6rLh97Ru1wHVe6SaWiy4pG4goaicUKmtNFkcappp091ic="
+    - secure: "cDkaqPavH5dvt4Wo5vInAj9RNmzOoxmhq67WMC7WWog6Ds0ICy3vMT0rJKOh/AYujWCGAqOGIdK3EAh7Ny33c5GN9x2trLCGtv2Vnoo7n4H9pj3MIyitAVWX0tRXyY+jZpNqc7LDRGLBDTggqxvpR7AL+H5VxV3aJA7AYGl3dzc="
+    - secure: "QuqIfCJ6LxBX3cAMYv6xAoaxUeMJHnaVnEu7D39CFounusCLriEA1Bj5Afb0Mxdkej1Faub08snoEIgjCyiL5UXbKG8A3TpodiNpzHrWe2jMvCiklidOTqH4xojeYjaRhIZJ58bAyd4zk87h3BIDZ8XthMHySs5bkp3nCc4HIfk="
+    - secure: "QyUrcGfHpgF4Sg/6jQzYFXQGVmH3pscxm41j30lBCW5WM9IHzzy4R/2m//IviWlBCNqGlvXPfp9vOZSZkhuZnAZdMZft/dRNtHHSssoNiXxjPxHEBSJhGNgBlZdljn039jPaKJEmk58X13zCSuJNod5zgeDVdrHJoD6NLB7juDg="
+    - secure: "IdTVUMXlmCNs1lkhvwzjGcFpc+1/1q+NmrdKIeoXwmReSLiHhQx3aD6P8bpyRI9rx6jwg+/E4S1iLTPKIvH6nd8pLGv95w8EDaOsdJKNgaXaIL0jIQeyWNO+aEDnjakGKYitspXUAoSJM/B8ky/Jl82fwmyA37SZntx2ud9Xqaw="
+    - secure: "J/SErJGs9UUQhl9xokRIGTzLnNEwT0K+v4hgNk2FcXLMHO1XMiGNNKaLQwsvaLxxPr1MiylVb3Jcl7jHeBgwa+ooUgkqTbMBOFXi6JbPtJt8aeWIV8sePTjCpkaVJZaH2eMQ86LtAKa/jJOiG62OT+97JLkLvqw1EPRQbd2nMCY="
+    - secure: "aP8+wB6Aytchp5ygmzMH3vPlfq3hfkV4ne07fxqlhpj4fmBXB/DrKqayjctOweCNs0VtWRWCOD7W8R49WZuDO0Z6S+3LYG8yyMqoeBBAjIty2tT0EGrWBPVEuohp8whk6ytr8dUOUSYEbyGSUKf0LZpYvKe1LszeRpfZWxMlCag="
+    - secure: "R6d7fcafLKG/4nqz0MiSZLA+aEBDjwcS340qEsy6bIWDfXMlZroCBDm8Wy3K9jWwArmHiVpxCw6b6LE5OLhniNGGp9Dc+RSG1Rd6yAap6inORoZuxujT//X/5nsYZ7vOWD926QfK3NWPL7Whfh5PrbAy7rqsxDl5RyRdzYYgxSI="
+    - secure: "Ty4wJEEI1j0M0oMb8hSL4X/LL4n8t1ewSxT0Fan8jCeOghdNgEiir3/B/+6HaPuZ5OBz42hp2li4w2HU2z8xDCc34Fy46XIFaOQvW2kNKIIjmZa39pgqxFIR5KDAGxiXLIBje6MYrUjf38QYRXm8rFW4kTJBCPhx6Z/b0Z9Y1OM="
+    - secure: "P3JZdVs3ixRnUsvkpMbo9F0o8Nc1pWBLDITbzwhPLJ/rX8CXHA2/4BmE+MWxt6AZ/qVEcwoTRGtN9Jxmyl0UGB9CAFoum/Z7EUxdEGcnVT5uLCQKnKGpfIcwhARPU2buExt/x+AJwoqC00/PjbabFci5f+AlVBlSBwQns53gnSQ="
+    - secure: "K4F78Cw5IEb0bDKtOyqZ/l9Tp527BD7PyeRmls+tQ5vaQLs/LHQLxp6rNsfElZ2FGrH/ADNUUKqwaLH9BUZojEgfvPU9ZNK0JF3zZqBxbgpm3Rituf7lPgmr/6nprUKuSk+jT/R7DRw32MAxo0aYU+NDcrSDYuP8e3nDVWDC/CA="
+    - secure: "F9UAQBx/nZYw+4pG8TBCAV8m+nF5ZCcI9bSo1olJkiYJlThIa2sYrWejplkc6N/D+Z0sv0clBjCePr2GVME9zHoZ0soYTTrhSF6hH2KutJF2eXJLq0SHnDJd7QknItVroEOU0YwJw415232RH+b4EmAjS8G57NZeI1sm3a2PSxM="
+    - secure: "RUWQrjUcmblGru/KL2Mh4vtg+55PP21dyauCYuSlEHdfc/VXhkO468JRJeRe9r9MdOqSzKax8M537PaBMdQikDzAZ8FN4MBsC1ydTZJM+kjM+JDwMBc+laVkyVdcnwc6TQvR/IChdeeijZf1ZT44zXNJ41XfH1cpI9Uqt3S1hCw="
+    - secure: "E/XE7GetwwKf2R2l1fnSxqnITc0e9CU0iBHltzXyhqEpb9dxFloctXABMo6Je+UZh+xtx/eN+byu7dzbVQQq4179HZvXXNZbJeoi7Kql4l7BhYLYDT5BuoUMtYmZ4iQFJpmrYSbP3yQ1kX3XwDJ/Z2mVr4aFqUvuYRfncNZhMU8="
 
 install:
-  # Make some variables available to the travis-ci.sh script.
+  # Dynamic hosts through Pantheon mean constantly checking interactively
+  # that we mean to connect to an unknown host. We ignore those here.
+    - echo "StrictHostKeyChecking no" > ~/.ssh/config
 
-  # Copy the script into a stable location.
-    - bash scripts/install.sh
+  # Install Drush.
+    - composer global require drush/drush:6.2.0
+    - export PATH="$HOME/.composer/vendor/bin:$PATH"
 
+  # Install Terminus.
+    - git clone https://github.com/pantheon-systems/terminus.git $HOME/.drush/terminus
+    - cd $HOME/.drush/terminus
+    - composer update --no-dev
+    - drush cc drush
+
+  # Install additional test dependencies on Travis (like Casper, Behat, BBC Wraith, Selenium, etc)
+    # Selenium:
+    # - java -jar selenium-server-standalone-2.33.0.jar &
+    # //replace with the name of the version you downloaded
+    # Behat:
+    # - composer global require behat
 before_script:
-  # - $HOME/travis-ci.sh before-tests
-  # - bash scripts/before_script.sh 
+  # Decrypt the encoded private key to the /.ssh directory.
+    - echo -n $id_rsa_{00..30} >> ~/.ssh/id_rsa_base64
+    - base64 --decode --ignore-garbage ~/.ssh/id_rsa_base64 > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  # Authenticate with Pantheon via Terminus.
+    - drush pauth $PEMAIL --password=$PPASS
+    - drush paliases
+  # Obtain an"d set the UUID's for the site(s)
+    - PUUID=`drush psite-uuid $PNAME | cut -f2 -d' '`
+  # Wipe the target environment
+    - drush psite-cmode PUUID dev git
+    - drush psite-ewipe PUUID dev
+  # Consider cloning into the UPSTREAM
+  #  - git clone
+  # Build the Upstream repo with drush make
+    - cd $TRAVIS_BUILD_DIR
+    - drush make $DISTRO.make ~/$UPSTREAM_BUILD_DIR -y
+    - cd ~/$UPSTREAM_BUILD_DIR
+    - git config --global user.email "training@getpantheon.com"
+    - git config --global user.name "Pantheon Training"
+    - git init
+  # Add the fresh install Pantheon site a remote and push to it.
+    - git remote add pantheon_install ssh://codeserver.dev.$PUUID@codeserver.dev.$PUUID.drush.in:2222/~/repository.git
+    - git add ~/$UPSTREAM_BUILD_DIR
+    - git commit -m "Build $TRAVIS dev"
+  # Ensure the target is in git mode
+    - drush psite-cmode $PUUID dev git
+    - git push pantheon_install master
+  # We cannot be in a Drupal directory to run aliased drush commands.
+    - cd $HOME
+  # We need to create the settings.php file in order to run drush commands for
+  # the fresh installation.
+    - drush psite-cmode $PUUID dev sftp
+    - drush @pantheon.$PNAME.dev si pantheon --account-pass="admin" --site-name=$DISTRO-Build-Test --site-mail=noreply@getpantheon.com -y
+    - drush psite-commit $PUUID dev --message="Install site creating settings.php"
 
-script: 
-  # - bash scripts/run_tests.sh
-    - pwd
-  
+  # Enable additional test dependencies here, like SimpleTest and behat/mink
+    - drush @pantheon.$PNAME.dev en simpletest -y --strict=0
+    - drush @pantheon.$PNAME.dev en drupalextension -y --strict=0
+
+  # If you're using SimpleTest, you'll want to disable verbose logging. This
+  # ensures no false build failures from file write errors.
+    - drush @pantheon.$PNAME.dev vset -y simpletest_verbose 0 --strict=0
+
+script:
+  # Phing Drupal Distribution
+  #
+  # This is where you run your tests, be they SimpleTest, Casper, Behat,
+  # or otherwise. Here's a SimpleTest example. I've found that drush
+  # likes to exit with odd codes if you run multiple classes at once.
+  # You may have to run one class at a time.
+  #
+  #- drush @pantheon.$PNAME.dev test-run MyTestClass --strict=0
+  #- drush @pantheon.$PNAME.dev test-run MyTestClass2 --strict=0
+
 after_script:
-  # - $HOME/travis-ci.sh after-tests
-  # - bash scripts/after_script.sh
 
+  # Push to the upstream
+    - cd $UPSTREAM_BUILD_DIR;
+    # Upstream repo branch name to push to, upon success
+    - UPBRANCH="Build-$TRAVIS_BUILD_NUMBER"
+    - git remote-add upstream git@github.com:pantheon-learning/10s2cl-drops7.git
+    - git push --force upstream $UPBRANCH
 notifications:
   email:
     recipients:
-      # - panopoly-ci@googlegroups.com
     on_success: always
     on_failure: always

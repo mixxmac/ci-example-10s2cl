@@ -1,11 +1,23 @@
-; ten_steps_to_complex_learning make file for d.o. usage
+; 10s2cl make file for Pantheon
 core = "7.x"
 api = "2"
+
+; Drupal
+projects[drupal][type] = core
+projects[drupal][download][type] = git
+projects[drupal][download][url] = git://github.com/pantheon-systems/drops-7.git
+projects[drupal][download][branch] = master
 
 ; +++++ Modules +++++
 
 projects[admin_menu][version] = "3.0-rc4"
 projects[admin_menu][subdir] = "contrib"
+
+projects[configuration][version] = 2.x-dev
+projects[configuration][download][revision] = c092a4dab101e32cfed18666ab12b2964bde576c
+projects[configuration][download][branch] = 7.x-2.x
+projects[configuration][download][url] = http://git.drupal.org/project/configuration.git
+projects[configuration][subdir] = "contrib"
 
 projects[module_filter][version] = "2.0-alpha2"
 projects[module_filter][subdir] = "contrib"
@@ -15,9 +27,6 @@ projects[ctools][subdir] = "contrib"
 
 projects[profiler_builder][version] = "1.2"
 projects[profiler_builder][subdir] = "contrib"
-
-projects[eck][version] = "2.0-rc4"
-projects[eck][subdir] = "contrib"
 
 projects[features][version] = "2.0"
 projects[features][subdir] = "contrib"
@@ -37,12 +46,6 @@ projects[elements][subdir] = "contrib"
 projects[entity][version] = "1.5"
 projects[entity][subdir] = "contrib"
 
-projects[pantheon_api][version] = "1.0"
-projects[pantheon_api][subdir] = "contrib"
-
-projects[pantheon_login][version] = "1.0"
-projects[pantheon_login][subdir] = "contrib"
-
 projects[ckeditor][version] = "1.15"
 projects[ckeditor][subdir] = "contrib"
 
@@ -51,9 +54,3 @@ projects[views][subdir] = "contrib"
 
 projects[views_bulk_operations][version] = "3.2"
 projects[views_bulk_operations][subdir] = "contrib"
-
-; +++++ TODO modules without versions +++++
-
-projects[queues][version] = "" ; TODO add version
-projects[queues][subdir] = "contrib"
-
