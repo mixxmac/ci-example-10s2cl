@@ -12,20 +12,16 @@ env:
   # Name the distro
     - DISTRO='10s2cl'
   # Name the upstream
-    - UPSTREAM=$DISTRO-drops7
-    - echo $UPSTREAM
+    - UPSTREAM='10s2cl-drops7'
   # Site infomation for fresh install (drops7 upstream)
-    - PNAME="$DISTRO-install-test"
-    - echo $PNAME
+    - PNAME='10s2cl-install-test'
     - PSOURCE='dev'
   # Encrypted email and password variables for terminus to authenticate into Pantheon
     - secure: "E4Xtuee9bZ9iqFKPyTR3hA5dE/su7iz9sW1Qb2B6Al+Wh9EDoC9IJlF/g6MypVvduAKeSoIf9Judnnr1xt/E324OxYKCRFBAWpfFn8pnNchO2kFacwCX54q2ZnHxdg1Mhpcw1dUo61+7FvrKK6q9sg4LVZ+CzxuPi6p/3Ly/Fgc="
     - secure: "B36n51LDAYS/aPukaz9nnQAiOQLKb95aLNYqBrY7HGGSHnUgDa7098ZNCTqp/M0SDSeFLblfU44gi2hMpw8gfKPzhVvfn5iJocT5laXkWIB9MUJhTngCbponu1zC0UJqAgiIxfVpOSLrESHNJxbJxIzkSqDudijT8syLuEgPEeg="
-  # Upstream repo branch name to push to, upon success
-    - UBRANCH="Build-$TRAVIS_BUILD_NUMBER"
   # Identify the target environment
     - PHOST="https://dev-$PNAME.gotpantheon.com"
-    - UPSTREAM_BUILD_DIR=$DISTRO-drops7
+    - UPSTREAM_BUILD_DIR=~/$DISTRO-drops7
   # Encripted private Key
     - secure: "FJnKApQTXi4ZmbRe5aiB5umOOmCGi5EJpT4f49zC13dQa4/0XcLafQwb/+mhMp5e7hBXFedKkXkzG758dlYh3dWiFdBmJdoD4oQEVd+MNcMn8aLmb7vyPrEsH6DXPrrwOXunLCBRiMQHwPT8hCTTewpLCawFX5B157t0uNcCPg0="
     - secure: "D/vtljoTqcKHmkKFRUuF5dcksmRTl+wkNlNDPASSrzrpsVmYv4ZstX4S0txqtPp2Ul1Xq9v5uX2hDL+0DpMBACNTjnoe2Gh3NbFj6YB+SBke6OyTmjMOAC3WalFRXzQU5Jlz8DoJfPxwEG5aOq9Qi0PrISCyiI9AC3PxrJDtYN4="
@@ -133,7 +129,9 @@ after_script:
 
   # Push to the upstream
     - cd $UPSTREAM_BUILD_DIR;
-    - git remote-add upstream git@github.com:pantheon-learning/$DISTRO-drops7.git
+    # Upstream repo branch name to push to, upon success
+    - UPBRANCH="Build-$TRAVIS_BUILD_NUMBER"
+    - git remote-add upstream git@github.com:pantheon-learning/10s2cl-drops7.git
     - git push --force upstream $UPBRANCH
 notifications:
   email:
