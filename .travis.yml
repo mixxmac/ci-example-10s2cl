@@ -12,9 +12,11 @@ env:
   # Name the distro
     - DISTRO='10s2cl'
   # Name the upstream
-    - UPSTREAM="$DISTRO-drops7"
+    - UPSTREAM=$DISTRO-drops7
+    - echo $UPSTREAM
   # Site infomation for fresh install (drops7 upstream)
     - PNAME="$DISTRO-install-test"
+    - echo $PNAME
     - PSOURCE='dev'
   # Encrypted email and password variables for terminus to authenticate into Pantheon
     - secure: "E4Xtuee9bZ9iqFKPyTR3hA5dE/su7iz9sW1Qb2B6Al+Wh9EDoC9IJlF/g6MypVvduAKeSoIf9Judnnr1xt/E324OxYKCRFBAWpfFn8pnNchO2kFacwCX54q2ZnHxdg1Mhpcw1dUo61+7FvrKK6q9sg4LVZ+CzxuPi6p/3Ly/Fgc="
