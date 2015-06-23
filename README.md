@@ -1,6 +1,3 @@
 10s2cl
 ======
-
-
-### Build Status
-[![Build Status](https://travis-ci.org/pantheon-learning/10s2cl.svg?branch=master)](https://travis-ci.org/pantheon-learning/10s2cl)
+[![Build Status](https://travis-ci.org/mixxmac/ci-example-10s2cl.svg)](https://travis-ci.org/mixxmac/ci-example-10s2cl)
